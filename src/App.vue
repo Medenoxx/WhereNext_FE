@@ -1,12 +1,5 @@
 <template>
   <v-app>
-    <!-- VideoModal einbinden -->
-   <!-- VideoModal einbinden -->
-   <VideoModal
-      v-if="showVideoModal"
-      v-model="showVideoModal"
-      @videoWatched="onVideoWatched"
-    />
     <v-navigation-drawer
         v-model="drawer"
         app
@@ -117,15 +110,13 @@ import {useAuthStore} from '@/stores/auth';
 import {useAdStore} from '@/stores/ad';
 import {ref, onMounted} from 'vue';
 import AdvertisementBanner from '@/components/AdvertisementBanner.vue';
-import VideoModal from './components/VideoModal.vue';
 
 
 
 export default {
   name: 'App',
   components: {
-    AdvertisementBanner,
-    VideoModal
+    AdvertisementBanner
   },
   setup() {
     const authStore = useAuthStore();
@@ -135,23 +126,8 @@ export default {
     const isAdHidden = ref(false);
     const adBanner = ref(null);
 
-    const showVideoModal = ref(false);
 
     authStore.initializeAuth();
-
-    // Methode zum Überprüfen, ob das Video bereits angesehen wurde
-    const checkVideoWatched = () => {
-      const videoWatched = localStorage.getItem('videoWatched');
-      if (!videoWatched) {
-        showVideoModal.value = true;
-      }
-    };
-
-    // Methode, die aufgerufen wird, wenn das Video angesehen wurde
-    const onVideoWatched = () => {
-      localStorage.setItem('videoWatched', 'true');
-      showVideoModal.value = false;
-    };
 
     const logout = () => {
       authStore.logout();
@@ -179,8 +155,6 @@ export default {
         isAdHidden.value = true;
       }
       adStore.initializeAdState();
-
-      checkVideoWatched();
     });
 
 
@@ -192,9 +166,7 @@ export default {
       resetAd,
       updateAdHidden,
       adBanner,
-      adStore,
-      showVideoModal,   
-      onVideoWatched,
+      adStore
     };
   },
 };
