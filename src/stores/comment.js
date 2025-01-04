@@ -2,7 +2,7 @@ import {defineStore} from "pinia";
 import axios from "axios";
 import {useAuthStore} from "@/stores/auth.js";
 
-const API_URL = import.meta.env.API_URL;
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const useCommentStore = defineStore('comment', {
     state: () => ({

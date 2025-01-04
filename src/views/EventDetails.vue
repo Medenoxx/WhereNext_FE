@@ -192,7 +192,7 @@
 
 
 <script>
-import {ref, onMounted, computed, watch} from 'vue';
+import {ref, onMounted, computed, watch, onUnmounted} from 'vue';
 import {useRoute, useRouter} from 'vue-router';
 import {useEventStore} from '@/stores/event';
 import {useAuthStore} from "@/stores/auth.js";
@@ -235,6 +235,23 @@ export default {
     const comments = computed(() => commentStore.eventComments?.reverse() ?? []);
 
     const showStatistics = ref(false);
+
+    let intervalId = null;
+
+    const startInterval = () => {
+      intervalId = setInterval(() => {
+        console.log('Interval started');
+        loadComments();
+      }, 30000);
+    };
+
+    const clearMyInterval = () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+        intervalId = null;
+        console.log('Interval cleared');
+      }
+    };
 
     // Methode zum Schließen des Dialogs
     const closeStatistics = () => {
@@ -307,9 +324,11 @@ export default {
         }
       }, 3000);
 
-      setInterval(() => {
-        loadComments();
-      }, 30000);
+      startInterval();
+    });
+
+    onUnmounted(() => {
+      clearMyInterval();
     });
 
     watch(route, async () => {
